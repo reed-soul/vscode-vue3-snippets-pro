@@ -1,5 +1,15 @@
 # Vue 3 Snippets Pro Cheat Sheet
 
+## Commands
+
+- `Vue 3: Search Snippets`：支持分类过滤（核心 / Pinia / Router / UI / 测试 / 性能）、模糊前缀和预览卡片；遵循 `vue3SnippetsPro.frameworkPriority` 排序 UI 片段。
+- `Vue 3: Validate All Snippets`：输出缺失字段、占位符错误、重复前缀，建议在 CI 中使用 `pnpm run validate:snippets`。
+
+## Presets
+
+- `vue3SnippetsPro.frameworkPriority`：控制 UI 框架在搜索结果中的优先级（如 element-plus > naive-ui > antdv...）。
+- `vue3SnippetsPro.stylePreset`：一键风格预设（element-plus-scss / naive-ui-setup / antdv-less / vanilla），会在搜索占位提示中展示。
+
 ## Vue 3 Core Snippets
 
 ### Base Templates

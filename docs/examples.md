@@ -298,4 +298,9 @@ const handleSubmit = async () => {
 </template>
 ```
 
+### Search Table Combos (Element Plus / Naive UI / PrimeVue)
+- Triggers: `v3el-search-table` / `v3n-search-table` / `v3prime-table`
+- 内置：loading、分页、筛选、重置、操作列示例；已预留接口调用/占位符。
+- 文档：Element Table https://element-plus.org/en-US/component/table.html ｜ Naive DataTable https://www.naiveui.com/en-US/os-theme/components/data-table ｜ PrimeVue DataTable https://primevue.org/datatable/
+
 [Back to Cheat Sheet](cheatsheet.md)
