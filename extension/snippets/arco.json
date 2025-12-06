@@ -1,6 +1,6 @@
 {
   "Vue3 Arco Search Table": {
-    "prefix": "v3a-search-table",
+    "prefix": "v3arco-search-table",
     "body": [
       "<script setup lang=\"ts\">",
       "import { ref, reactive } from 'vue'",
