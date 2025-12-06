@@ -124,7 +124,9 @@ async function searchSnippets(root: string): Promise<void> {
         return
     }
 
-    const snippetString = new vscode.SnippetString(picked.snippet.bodyLines.join('\n'))
+    const snippetString = new vscode.SnippetString(
+        prepareSnippetForContext(picked.snippet, editor.document)
+    )
     await editor.insertSnippet(snippetString)
 }
 
@@ -332,5 +334,59 @@ function normalizeBody(body: SnippetBody): string[] {
 
 function prefixesFrom(prefix: SnippetPrefix): string[] {
     return Array.isArray(prefix) ? prefix : [prefix]
+}
+
+function prepareSnippetForContext(snippet: LoadedSnippet, document: vscode.TextDocument): string {
+    if (snippet.bodyLines.length === 0) return ''
+
+    let lines = [...snippet.bodyLines]
+
+    if (document.languageId === 'vue') {
+        const docText = document.getText()
+        const hasScriptSetup = /<script\s+setup[^>]*>/i.test(docText)
+
+        if (hasScriptSetup) {
+            lines = stripScriptSetupWrapper(lines)
+        }
+
+        const existingImports = collectImportSet(docText)
+        lines = filterDuplicateImports(lines, existingImports)
+    }
+
+    return lines.join('\n')
+}
+
+function collectImportSet(text: string): Set<string> {
+    const set = new Set<string>()
+    const importPattern = /^\s*import\s.+from\s+['"][^'"]+['"];?\s*$/
+    text.split('\n').forEach((line) => {
+        const trimmed = line.trim()
+        if (importPattern.test(trimmed)) {
+            set.add(trimmed)
+        }
+    })
+    return set
+}
+
+function filterDuplicateImports(lines: string[], existingImports: Set<string>): string[] {
+    if (existingImports.size === 0) return lines
+    const importPattern = /^\s*import\s.+from\s+['"][^'"]+['"];?\s*$/
+    return lines.filter((line) => {
+        if (!importPattern.test(line.trim())) return true
+        return !existingImports.has(line.trim())
+    })
+}
+
+function stripScriptSetupWrapper(lines: string[]): string[] {
+    const startIndex = lines.findIndex((line) => /^<script\s+setup[^>]*>$/i.test(line.trim()))
+    if (startIndex === -1) return lines
+    const endIndex = lines.findIndex((line, idx) => idx > startIndex && /^<\/script>$/i.test(line.trim()))
+    if (endIndex === -1) return lines
+
+    const inner = lines.slice(startIndex + 1, endIndex)
+    // 去掉首尾空行，避免插入多余空白
+    while (inner.length > 0 && inner[0].trim() === '') inner.shift()
+    while (inner.length > 0 && inner[inner.length - 1].trim() === '') inner.pop()
+    return inner.length > 0 ? inner : lines
 }
  
