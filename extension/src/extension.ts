@@ -79,15 +79,15 @@ async function searchSnippets(root: string): Promise<void> {
 
     const category = await vscode.window.showQuickPick(
         [
-            { label: '全部', value: 'all' },
-            { label: '核心', value: 'core' },
+            { label: 'All', value: 'all' },
+            { label: 'Core', value: 'core' },
             { label: 'Pinia', value: 'pinia' },
             { label: 'Router', value: 'router' },
-            { label: 'UI 框架', value: 'ui' },
-            { label: '测试', value: 'tests' },
-            { label: '性能', value: 'performance' }
+            { label: 'UI Frameworks', value: 'ui' },
+            { label: 'Tests', value: 'tests' },
+            { label: 'Performance', value: 'performance' }
         ],
-        { placeHolder: '选择分类过滤（可输入前缀继续模糊搜索）' }
+        { placeHolder: 'Select category filter (you can still fuzzy-search by prefix)' }
     )
 
     if (!category) return
@@ -96,7 +96,7 @@ async function searchSnippets(root: string): Promise<void> {
         (item) => category.value === 'all' || item.category === category.value
     )
     if (filtered.length === 0) {
-        vscode.window.showWarningMessage('当前分类下没有可用片段')
+        vscode.window.showWarningMessage('No snippets available in this category')
         return
     }
 
@@ -113,7 +113,7 @@ async function searchSnippets(root: string): Promise<void> {
     const picked = await vscode.window.showQuickPick(items, {
         matchOnDescription: true,
         matchOnDetail: true,
-        placeHolder: `输入前缀或描述来搜索片段（当前风格预设：${preferences.stylePreset}）`
+        placeHolder: `Type prefix or description to search (current preset: ${preferences.stylePreset})`
     })
 
     if (!picked?.snippet) return
@@ -244,7 +244,7 @@ async function validateAllSnippets(root: string): Promise<ValidationIssue[]> {
             issues.push({
                 file: path.relative(root, fullPath),
                 name: 'file',
-                message: 'JSON 解析失败'
+                message: 'JSON parse failed'
             })
             continue
         }
@@ -309,7 +309,7 @@ function validateSnippet(
     if (snippet.body) {
         const bodyLines = normalizeBody(snippet.body)
         for (const line of bodyLines) {
-            // 重建正则以避免全局正则的 lastIndex 在多行间串扰
+            // Recreate regex per line to avoid global lastIndex bleeding across lines
             const placeholderPattern = /\${(\d+)(:[^}]*)?}/g
             let match: RegExpExecArray | null
             while ((match = placeholderPattern.exec(line)) !== null) {
@@ -384,7 +384,7 @@ function stripScriptSetupWrapper(lines: string[]): string[] {
     if (endIndex === -1) return lines
 
     const inner = lines.slice(startIndex + 1, endIndex)
-    // 去掉首尾空行，避免插入多余空白
+    // Trim leading/trailing blanks to avoid extra whitespace
     while (inner.length > 0 && inner[0].trim() === '') inner.shift()
     while (inner.length > 0 && inner[inner.length - 1].trim() === '') inner.pop()
     return inner.length > 0 ? inner : lines
