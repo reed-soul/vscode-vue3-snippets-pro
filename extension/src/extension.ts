@@ -306,8 +306,9 @@ function validateSnippet(
 
     if (snippet.body) {
         const bodyLines = normalizeBody(snippet.body)
-        const placeholderPattern = /\${(\d+)(:[^}]*)?}/g
         for (const line of bodyLines) {
+            // 重建正则以避免全局正则的 lastIndex 在多行间串扰
+            const placeholderPattern = /\${(\d+)(:[^}]*)?}/g
             let match: RegExpExecArray | null
             while ((match = placeholderPattern.exec(line)) !== null) {
                 const index = Number(match[1])
