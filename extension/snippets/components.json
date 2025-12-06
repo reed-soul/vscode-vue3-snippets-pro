@@ -29,15 +29,15 @@
       "\t\t\t<div v-if=\"show\" class=\"modal-overlay\" @click=\"close\">",
       "\t\t\t\t<div class=\"modal\" @click.stop>",
       "\t\t\t\t\t<div class=\"modal-header\">",
-      "\t\t\t\t\t\t<h3>{{ title || '提示' }}</h3>",
+      "\t\t\t\t\t\t<h3>{{ title || 'Tip' }}</h3>",
       "\t\t\t\t\t\t<button class=\"close-btn\" @click=\"close\">&times;</button>",
       "\t\t\t\t\t</div>",
       "\t\t\t\t\t<div class=\"modal-body\">",
       "\t\t\t\t\t\t<slot></slot>",
       "\t\t\t\t\t</div>",
       "\t\t\t\t\t<div class=\"modal-footer\">",
-      "\t\t\t\t\t\t<button @click=\"close\">取消</button>",
-      "\t\t\t\t\t\t<button class=\"primary\" @click=\"confirm\">确定</button>",
+      "\t\t\t\t\t\t<button @click=\"close\">Cancel</button>",
+      "\t\t\t\t\t\t<button class=\"primary\" @click=\"confirm\">Confirm</button>",
       "\t\t\t\t\t</div>",
       "\t\t\t\t</div>",
       "\t\t\t</div>",
@@ -77,7 +77,7 @@
       "}",
       "</style>"
     ],
-    "description": "Vue 3 Modal 组件模板"
+    "description": "Vue 3 Modal Component Template"
   },
   "Vue3 Table Component": {
     "prefix": "v3table",
@@ -145,6 +145,6 @@
       "}",
       "</style>"
     ],
-    "description": "Vue 3 Table 组件模板"
+    "description": "Vue 3 Table Component Template"
   }
 } 

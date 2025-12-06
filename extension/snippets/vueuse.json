@@ -4,7 +4,7 @@
     "body": [
       "const ${1:state} = useLocalStorage('${2:key}', ${3:defaultValue})"
     ],
-    "description": "使用 VueUse 的 useLocalStorage"
+    "description": "Use VueUse's useLocalStorage"
   },
   "Vue3 useFetch": {
     "prefix": "v3fetch",
@@ -12,10 +12,10 @@
       "const { data, error, loading, execute } = useFetch('${1:url}')",
       "",
       "watch(data, (newData) => {",
-      "\t${2:// 处理数据}",
+      "\t${2:// Handle data}",
       "})"
     ],
-    "description": "使用 VueUse 的 useFetch"
+    "description": "Use VueUse's useFetch"
   },
   "Vue3 useIntersectionObserver": {
     "prefix": "v3observer",
@@ -26,10 +26,10 @@
       "useIntersectionObserver(target, ([{ isIntersecting }]) => {",
       "\tisVisible.value = isIntersecting",
       "\tif (isIntersecting) {",
-      "\t\t${1:// 元素进入视口时的逻辑}",
+      "\t\t${1:// Logic when element enters viewport}",
       "\t}",
       "})"
     ],
-    "description": "使用 VueUse 的 useIntersectionObserver 实现懒加载"
+    "description": "Use VueUse's useIntersectionObserver for lazy loading"
   }
 } 

@@ -26,7 +26,7 @@
     "prefix": "v3watch",
     "body": [
       "watch(${1:source}, (newValue, oldValue) => {",
-      "\t${2:// 处理逻辑}",
+      "\t${2:// Handle logic}",
       "}${3:, { deep: true }})"
     ],
     "description": "Vue 3 watch"
@@ -35,7 +35,7 @@
     "prefix": "v3watcheffect",
     "body": [
       "watchEffect(() => {",
-      "\t${1:// 副作用逻辑}",
+      "\t${1:// Side effect logic}",
       "})"
     ],
     "description": "Vue 3 watchEffect"

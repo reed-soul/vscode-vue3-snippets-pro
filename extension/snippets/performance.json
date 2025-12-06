@@ -6,7 +6,7 @@
       "\timport('./${2:path/to/component}.vue')",
       ")"
     ],
-    "description": "Vue 3 异步组件导入"
+    "description": "Vue 3 Async Component Import"
   },
   "Vue3 Keep Alive": {
     "prefix": "v3keep",
@@ -18,7 +18,7 @@
       "\t<component :is=\"${3:currentComponent}\" />",
       "</KeepAlive>"
     ],
-    "description": "Vue 3 KeepAlive 组件"
+    "description": "Vue 3 KeepAlive Component"
   },
   "Vue3 Virtual List": {
     "prefix": "v3virtual",
@@ -101,6 +101,6 @@
       "}",
       "</style>"
     ],
-    "description": "Vue 3 虚拟列表组件"
+    "description": "Vue 3 Virtual List Component"
   }
 } 

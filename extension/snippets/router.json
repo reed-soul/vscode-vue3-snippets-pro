@@ -24,20 +24,20 @@
       "",
       "export default router"
     ],
-    "description": "创建 Vue Router 实例"
+    "description": "Create Vue Router instance"
   },
   "Vue3 Router Guard": {
     "prefix": "v3guard",
     "body": [
       "router.beforeEach(async (to, from) => {",
-      "\t// 检查认证",
+      "\t// Check authentication",
       "\tif (to.meta.requiresAuth && !isAuthenticated()) {",
-      "\t\t// 重定向到登录页",
+      "\t\t// Redirect to login page",
       "\t\treturn { name: 'Login', query: { redirect: to.fullPath } }",
       "\t}",
       "})"
     ],
-    "description": "添加 Vue Router 导航守卫"
+    "description": "Add Vue Router navigation guard"
   },
   "Vue3 useRouter": {
     "prefix": "v3userouter",
@@ -52,6 +52,6 @@
       "\t})",
       "}"
     ],
-    "description": "使用 Vue Router Composition API"
+    "description": "Use Vue Router Composition API"
   }
 } 

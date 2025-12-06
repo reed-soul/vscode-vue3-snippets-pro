@@ -5,17 +5,17 @@
       "import { defineStore } from 'pinia'",
       "",
       "export const use${1:Feature}Store = defineStore('${2:feature}', () => {",
-      "\t// 状态",
+      "\t// State",
       "\tconst ${3:state} = ref(${4:initialValue})",
       "",
-      "\t// 计算属性",
+      "\t// Computed property",
       "\tconst ${5:computed} = computed(() => {",
       "\t\treturn ${6:value}",
       "\t})",
       "",
-      "\t// 操作方法",
+      "\t// Action method",
       "\tfunction ${7:action}() {",
-      "\t\t${8:// 实现逻辑}",
+      "\t\t${8:// Implement logic}",
       "\t}",
       "",
       "\treturn {",
@@ -25,7 +25,7 @@
       "\t}",
       "})"
     ],
-    "description": "创建 Pinia Store"
+    "description": "Create Pinia Store"
   },
   "Vue3 Pinia Store with TypeScript": {
     "prefix": "v3store-ts",
@@ -37,20 +37,20 @@
       "}",
       "",
       "export const use${4:Feature}Store = defineStore('${5:feature}', () => {",
-      "\t// 状态",
+      "\t// State",
       "\tconst state = reactive<${1:State}>({",
       "\t\t${2:property}: ${6:initialValue}",
       "\t})",
       "",
-      "\t// 计算属性",
+      "\t// Computed property",
       "\tconst ${7:computed} = computed(() => {",
       "\t\treturn state.${2:property}",
       "\t})",
       "",
-      "\t// 操作方法",
+      "\t// Action method",
       "\tasync function ${8:action}(payload: ${9:type}) {",
       "\t\ttry {",
-      "\t\t\t${10:// 实现逻辑}",
+      "\t\t\t${10:// Implement logic}",
       "\t\t} catch (error) {",
       "\t\t\tconsole.error(error)",
       "\t\t\tthrow error",
@@ -64,6 +64,6 @@
       "\t}",
       "})"
     ],
-    "description": "创建带有 TypeScript 支持的 Pinia Store"
+    "description": "Create Pinia Store with TypeScript support"
   }
 } 

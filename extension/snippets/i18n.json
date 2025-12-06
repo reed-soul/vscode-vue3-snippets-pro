@@ -9,7 +9,7 @@
       "\t\t${1:key}: '${2:value}'",
       "\t},",
       "\tzh: {",
-      "\t\t${1:key}: '${3:值}'",
+      "\t\t${1:key}: '${3:value}'",
       "\t}",
       "}",
       "",
@@ -21,18 +21,18 @@
       "",
       "export default i18n"
     ],
-    "description": "创建 Vue I18n 实例"
+    "description": "Create Vue I18n instance"
   },
   "Vue3 useI18n": {
     "prefix": "v3usei18n",
     "body": [
       "const { t, locale } = useI18n()",
       "",
-      "// 切换语言",
+      "// Toggle language",
       "function toggleLocale() {",
       "\tlocale.value = locale.value === 'en' ? 'zh' : 'en'",
       "}"
     ],
-    "description": "使用 Vue I18n Composition API"
+    "description": "Use Vue I18n Composition API"
   }
 } 
