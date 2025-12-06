@@ -70,6 +70,7 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 async function searchSnippets(root: string): Promise<void> {
+    const preferences = readPreferences()
     const snippets = await loadSnippets(root, 'all')
     if (snippets.length === 0) {
         vscode.window.showInformationMessage('No snippets found')
@@ -91,23 +92,28 @@ async function searchSnippets(root: string): Promise<void> {
 
     if (!category) return
 
-    const filtered = snippets.filter((item) => category.value === 'all' || item.category === category.value)
+    const filtered = snippets.filter(
+        (item) => category.value === 'all' || item.category === category.value
+    )
     if (filtered.length === 0) {
         vscode.window.showWarningMessage('当前分类下没有可用片段')
         return
     }
 
-    const items: (vscode.QuickPickItem & { snippet: LoadedSnippet })[] = filtered.map((snippet) => ({
-        label: snippet.prefixes.join(', '),
-        description: snippet.description || snippet.name,
-        detail: buildPreview(snippet),
-        snippet
-    }))
+    const sorted = sortSnippets(filtered, preferences.frameworkPriority)
+    const items: (vscode.QuickPickItem & { snippet: LoadedSnippet })[] = sorted.map(
+        (snippet) => ({
+            label: snippet.prefixes.join(', '),
+            description: snippet.description || snippet.name,
+            detail: buildPreview(snippet),
+            snippet
+        })
+    )
 
     const picked = await vscode.window.showQuickPick(items, {
         matchOnDescription: true,
         matchOnDetail: true,
-        placeHolder: '输入前缀或描述来搜索片段，回车插入'
+        placeHolder: `输入前缀或描述来搜索片段（当前风格预设：${preferences.stylePreset}）`
     })
 
     if (!picked?.snippet) return
@@ -180,6 +186,43 @@ function buildPreview(snippet: LoadedSnippet): string {
     const trimmed = lines.map((line) => line.trimEnd())
     const suffix = snippet.bodyLines.length > 6 ? '\n…' : ''
     return `${snippet.file} • ${snippet.description || snippet.name}\n${trimmed.join('\n')}${suffix}`
+}
+
+function readPreferences(): { frameworkPriority: string[]; stylePreset: string } {
+    const config = vscode.workspace.getConfiguration('vue3SnippetsPro')
+    const frameworkPriority = config.get<string[]>('frameworkPriority') ?? []
+    const stylePreset = config.get<string>('stylePreset') ?? 'element-plus-scss'
+    return { frameworkPriority, stylePreset }
+}
+
+function sortSnippets(snippets: LoadedSnippet[], priority: string[]): LoadedSnippet[] {
+    const priorityMap = new Map<string, number>()
+    priority.forEach((fw, index) => priorityMap.set(fw, index))
+
+    return [...snippets].sort((a, b) => {
+        const weightA = uiWeight(a, priorityMap)
+        const weightB = uiWeight(b, priorityMap)
+        if (weightA !== weightB) return weightA - weightB
+        return a.prefixes.join(', ').localeCompare(b.prefixes.join(', '))
+    })
+}
+
+function uiWeight(snippet: LoadedSnippet, priority: Map<string, number>): number {
+    if (snippet.category !== 'ui') return 0
+    const framework = inferFramework(snippet.file)
+    if (!framework) return priority.size
+    return priority.get(framework) ?? priority.size
+}
+
+function inferFramework(fileName: string): string | undefined {
+    if (fileName.includes('element-plus')) return 'element-plus'
+    if (fileName.includes('ant-design')) return 'ant-design-vue'
+    if (fileName.includes('naive')) return 'naive-ui'
+    if (fileName.includes('vant')) return 'vant'
+    if (fileName.includes('primevue')) return 'primevue'
+    if (fileName.includes('vuetify')) return 'vuetify'
+    if (fileName.includes('arco')) return 'arco'
+    return undefined
 }
 
 async function validateAllSnippets(root: string): Promise<ValidationIssue[]> {

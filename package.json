@@ -361,6 +361,42 @@
               "description": "Prefix for component names (e.g., 'App')"
             }
           }
+        },
+        "vue3SnippetsPro.frameworkPriority": {
+          "type": "array",
+          "description": "Preferred UI frameworks ordering when searching snippets",
+          "items": {
+            "type": "string",
+            "enum": [
+              "element-plus",
+              "ant-design-vue",
+              "naive-ui",
+              "vant",
+              "primevue",
+              "vuetify",
+              "arco"
+            ]
+          },
+          "default": [
+            "element-plus",
+            "naive-ui",
+            "ant-design-vue",
+            "vant",
+            "primevue",
+            "vuetify",
+            "arco"
+          ]
+        },
+        "vue3SnippetsPro.stylePreset": {
+          "type": "string",
+          "description": "One-click style preset for snippet generation",
+          "enum": [
+            "element-plus-scss",
+            "naive-ui-setup",
+            "antdv-less",
+            "vanilla"
+          ],
+          "default": "element-plus-scss"
         }
       }
     },
