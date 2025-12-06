@@ -2,7 +2,7 @@
   "name": "vue3-snippets-pro",
   "displayName": "Vue 3 Snippets Pro",
   "description": "Professional Vue 3 Snippets with Composition API and TypeScript support",
-  "version": "1.1.19",
+  "version": "1.1.22",
   "publisher": "lushiqiang",
   "author": {
     "name": "lushiqiang",
@@ -444,7 +444,8 @@
     "rimraf": "^5.0.5",
     "tsx": "^4.7.0",
     "typescript": "^5.4.5",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "@vscode/vsce": "^3.7.1"
   },
   "main": "./extension/out/extension.js",
   "packageManager": "pnpm@9.14.4"

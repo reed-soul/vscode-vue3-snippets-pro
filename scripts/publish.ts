@@ -43,7 +43,7 @@ function packageExtension(version: string) {
         fs.mkdirSync(outDir);
     }
     
-    execSync(`vsce package --no-dependencies --out dist/vue3-snippets-pro-${version}.vsix`);
+    execSync(`pnpm exec vsce package --no-dependencies --out dist/vue3-snippets-pro-${version}.vsix`);
 }
 
 // 添加重试函数
@@ -77,7 +77,7 @@ async function publishExtension(version: string) {
     await retry(
         () => {
             execSync(
-                `vsce publish --packagePath dist/vue3-snippets-pro-${version}.vsix --no-dependencies`,
+                `pnpm exec vsce publish --packagePath dist/vue3-snippets-pro-${version}.vsix --no-dependencies`,
                 { stdio: 'inherit' }
             );
             return Promise.resolve();
