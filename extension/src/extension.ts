@@ -17,6 +17,20 @@ interface ValidationIssue {
     message: string
 }
 
+interface LoadedSnippet {
+    id: string
+    name: string
+    prefixes: string[]
+    description: string
+    bodyLines: string[]
+    file: string
+    category: SnippetCategory
+}
+
+type SnippetCategory = 'core' | 'pinia' | 'router' | 'ui' | 'tests' | 'performance'
+
+type SnippetFilter = SnippetCategory | 'all'
+
 export function activate(context: vscode.ExtensionContext): void {
     const output = vscode.window.createOutputChannel('Vue 3 Snippets Pro')
     context.subscriptions.push(output)
@@ -24,6 +38,12 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand('vue3snippets.showSnippets', () => {
             vscode.commands.executeCommand('editor.action.triggerSuggest')
+        })
+    )
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('vue3snippets.searchSnippets', async () => {
+            await searchSnippets(context.extensionPath)
         })
     )
 
@@ -47,6 +67,119 @@ export function activate(context: vscode.ExtensionContext): void {
             )
         })
     )
+}
+
+async function searchSnippets(root: string): Promise<void> {
+    const snippets = await loadSnippets(root, 'all')
+    if (snippets.length === 0) {
+        vscode.window.showInformationMessage('No snippets found')
+        return
+    }
+
+    const category = await vscode.window.showQuickPick(
+        [
+            { label: '全部', value: 'all' },
+            { label: '核心', value: 'core' },
+            { label: 'Pinia', value: 'pinia' },
+            { label: 'Router', value: 'router' },
+            { label: 'UI 框架', value: 'ui' },
+            { label: '测试', value: 'tests' },
+            { label: '性能', value: 'performance' }
+        ],
+        { placeHolder: '选择分类过滤（可输入前缀继续模糊搜索）' }
+    )
+
+    if (!category) return
+
+    const filtered = snippets.filter((item) => category.value === 'all' || item.category === category.value)
+    if (filtered.length === 0) {
+        vscode.window.showWarningMessage('当前分类下没有可用片段')
+        return
+    }
+
+    const items: (vscode.QuickPickItem & { snippet: LoadedSnippet })[] = filtered.map((snippet) => ({
+        label: snippet.prefixes.join(', '),
+        description: snippet.description || snippet.name,
+        detail: buildPreview(snippet),
+        snippet
+    }))
+
+    const picked = await vscode.window.showQuickPick(items, {
+        matchOnDescription: true,
+        matchOnDetail: true,
+        placeHolder: '输入前缀或描述来搜索片段，回车插入'
+    })
+
+    if (!picked?.snippet) return
+
+    const editor = vscode.window.activeTextEditor
+    if (!editor) {
+        vscode.window.showWarningMessage('No active editor to insert snippet')
+        return
+    }
+
+    const snippetString = new vscode.SnippetString(picked.snippet.bodyLines.join('\n'))
+    await editor.insertSnippet(snippetString)
+}
+
+async function loadSnippets(root: string, filter: SnippetFilter): Promise<LoadedSnippet[]> {
+    const snippetDir = path.join(root, 'extension', 'snippets')
+    const files = (await fs.readdir(snippetDir)).filter((file) => file.endsWith('.json'))
+    const results: LoadedSnippet[] = []
+
+    for (const fileName of files) {
+        const category = inferCategory(fileName)
+        if (filter !== 'all' && category !== filter) continue
+
+        const fullPath = path.join(snippetDir, fileName)
+        const raw = await fs.readFile(fullPath, 'utf-8')
+        let json: Record<string, Snippet>
+        try {
+            json = JSON.parse(raw) as Record<string, Snippet>
+        } catch {
+            continue
+        }
+
+        for (const [name, snippet] of Object.entries(json)) {
+            results.push({
+                id: `${fileName}-${name}`,
+                name,
+                prefixes: snippet.prefix ? prefixesFrom(snippet.prefix) : [],
+                description: snippet.description ?? '',
+                bodyLines: normalizeBody(snippet.body ?? ''),
+                file: fileName,
+                category
+            })
+        }
+    }
+
+    return results
+}
+
+function inferCategory(fileName: string): SnippetCategory {
+    if (fileName.includes('pinia')) return 'pinia'
+    if (fileName.includes('router')) return 'router'
+    if (fileName.includes('performance')) return 'performance'
+    if (fileName.includes('test')) return 'tests'
+    if (
+        fileName.includes('element-plus') ||
+        fileName.includes('ant-design') ||
+        fileName.includes('naive') ||
+        fileName.includes('vant') ||
+        fileName.includes('vuetify') ||
+        fileName.includes('primevue') ||
+        fileName.includes('arco')
+    ) {
+        return 'ui'
+    }
+    return 'core'
+}
+
+function buildPreview(snippet: LoadedSnippet): string {
+    const lines = snippet.bodyLines.slice(0, 6)
+    const trimmed = lines.map((line) => line.trimEnd())
+    const suffix = snippet.bodyLines.length > 6 ? '\n…' : ''
+    return `${snippet.file} • ${snippet.description || snippet.name}\n${trimmed.join('\n')}${suffix}`
 }
 
 async function validateAllSnippets(root: string): Promise<ValidationIssue[]> {
