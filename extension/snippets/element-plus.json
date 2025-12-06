@@ -3,6 +3,7 @@
     "prefix": "v3el-search-table",
     "body": [
       "<script setup lang=\"ts\">",
+      "// Docs: https://element-plus.org/en-US/component/table.html",
       "import { ref, reactive } from 'vue'",
       "",
       "interface SearchForm {",

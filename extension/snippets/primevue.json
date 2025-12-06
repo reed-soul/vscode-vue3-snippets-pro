@@ -3,6 +3,7 @@
     "prefix": "v3prime-table",
     "body": [
       "<script setup lang=\"ts\">",
+      "// Docs: https://primevue.org/datatable/",
       "import { ref, onMounted } from 'vue'",
       "",
       "const items = ref([])",
